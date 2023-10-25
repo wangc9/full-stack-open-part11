@@ -2,7 +2,7 @@ name: Status Check Pipeline
 
 on:
   schedule:
-    - cron: '* 17 25 10 *'
+    - cron: '0/15 18-19 25 10 *'
 
 jobs:
   check_status:
