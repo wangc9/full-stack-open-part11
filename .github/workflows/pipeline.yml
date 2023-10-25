@@ -22,25 +22,43 @@ jobs:
         run: npm run eslint
       - name: Run jest tests
         run: npm test
+      - name: Report jest test success
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: success()
+        with:
+          severity: info
+          description: Success
+          details: Jest successful
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      - name: Report jest test failure
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: failure()
+        with:
+          severity: error
+          description: Failed
+          details: Jest failed
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
       - name: Run e2e tests
         uses: cypress-io/github-action@v6
         with:
           command: npm run test:e2e
           start: npm run start-prod
           wait-on: 'http://localhost:5000'
-      - name: Report test success
+      - name: Report e2e test success
         uses: rjstone/discord-webhook-notify@v1.0.4
         if: success()
         with:
           severity: info
-          details: Test successful
+          description: Success
+          details: Cypress successful
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
-      - name: Report test failure
+      - name: Report e2e test failure
         uses: rjstone/discord-webhook-notify@v1.0.4
         if: failure()
         with:
           severity: error
-          details: Test failed
+          description: Failed
+          details: Cypress failed
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
 
@@ -59,6 +77,22 @@ jobs:
         run: flyctl deploy --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      - name: Report deployment success
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: success()
+        with:
+          severity: info
+          description: Success
+          details: Deployment successful
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      - name: Report deployment failure
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: failure()
+        with:
+          severity: error
+          description: Deployment Failed
+          details: Test failed
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
   version_change:
     if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ', '), '#skip') }}
@@ -71,3 +105,19 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BUMP: patch
+      - name: Report version update success
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: success()
+        with:
+          severity: info
+          description: Success
+          details: Version change successful
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      - name: Report version update failure
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: failure()
+        with:
+          severity: error
+          description: Failed
+          details: Version change failed
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
