@@ -9,7 +9,7 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  simple_deployment_pipeline:
+  pre_deploy_pipeline:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
@@ -28,6 +28,17 @@ jobs:
           command: npm run test:e2e
           start: npm run start-prod
           wait-on: 'http://localhost:5000'
+
+  deployment_pipeline:
+    runs-on: ubuntu-20.04
+    if: ${{ github.event_name == 'push' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Install dependencies
+        run: npm install
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Deploy to Fly.io
         run: flyctl deploy --remote-only
