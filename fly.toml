@@ -17,13 +17,13 @@ primary_region = "arn"
     NODE_VERSION = "16.20.1"
 
 [env]
-  PORT = "8080"
+  PORT = "5000"
 
 [[services]]
   processes = ["app"]
 
 [http_service]
-  internal_port = 8080
+  internal_port = 5000
   force_https = true
   auto_stop_machines = true
   auto_start_machines = true
