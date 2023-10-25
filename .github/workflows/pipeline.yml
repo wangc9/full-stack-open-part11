@@ -46,7 +46,7 @@ jobs:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
   version_change:
-    if: ${{ github.event_name == 'push' }}
+    if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ', '), '#skip') }}
     needs: [pre_deploy_pipeline, deployment_pipeline]
     runs-on: ubuntu-20.04
     steps:
