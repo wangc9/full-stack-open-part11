@@ -1,0 +1,16 @@
+name: Status Check Pipeline
+
+on:
+  schedule:
+    - cron: '* 17 25 10 *'
+
+jobs:
+  check_status:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check URL
+        uses: jtalk/url-health-check-action@v3
+        with:
+          url: https://pokedex-cw-ci.fly.dev
+          max-attempts: 5
+          retry-delay: 5s
